@@ -42,6 +42,7 @@ const $=id=>document.getElementById(id);
 function element(tag,cls,text){const el=document.createElement(tag);if(cls)el.className=cls;if(text!==undefined)el.textContent=text;return el;}
 function show(id){['editor','summary'].forEach(s=>$(s).hidden=s!==id);window.scrollTo(0,0);const heading=$(id).querySelector('h1');heading.tabIndex=-1;heading.focus({preventScroll:true});}
 const items=groups.flatMap((group,gi)=>group.items.map((label,ii)=>({label,key:gi+'-'+ii})));
+const fluidTiles=items.splice(0,4);items.splice(30,0,...fluidTiles);
 function updateProgress(){$('progress').textContent=ratings.size+' / '+items.length+' done';}
 function build(){
  items.forEach(({label,key})=>{const tile=element('button','bingo-tile');tile.type='button';tile.dataset.key=key;tile.setAttribute('aria-pressed','false');tile.setAttribute('aria-label',label);const mark=element('span','tile-mark');mark.setAttribute('aria-hidden','true');tile.append(mark,element('span','tile-label',label));tile.onclick=()=>{const done=!ratings.has(key);if(done)ratings.set(key,true);else ratings.delete(key);tile.setAttribute('aria-pressed',String(done));mark.textContent=done?'✓':'';updateProgress();};$('sections').append(tile);});updateProgress();
